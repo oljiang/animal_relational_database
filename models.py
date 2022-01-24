@@ -1,9 +1,3 @@
-# Animals
-# ID / Name / Habitat
-
-# Zookeeper log
-# ID / Animal ID (Foreign Key) / Notes
-
 from venv import create
 from sqlalchemy import create_engine, Column, Integer, String, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
@@ -21,7 +15,8 @@ class Animal(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String)
     habitat = Column(String)
-    logs = relationship("Logbook", back_populates="animal")
+    logs = relationship("Logbook", back_populates="animal",
+                        cascade="all, delete, delete-orphan")
 
     def __repr__(self):
         return f"""
@@ -42,3 +37,7 @@ class Logbook(Base):
             \nLogbook {self.id}
             \rAnimal ID = {self.animal_id}
             \rNotes = {self.notes}"""
+
+
+if __name__ == "__main__":
+    Base.metadata.create_all(engine)
